@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五年啦！五週年紀念</title>
+    <style>
+        :root {
+            --bg-color: #f7e773;   /* 亮黃背景 */
+            --accent-color: #f35d66; /* 珊瑚紅配色 */
+            --dark-text: #333;
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            overflow: hidden;
+        }
+
+        /* 標題設計 */
+        h1 {
+            color: var(--accent-color);
+            font-size: 42px;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 0px #fff;
+            letter-spacing: 5px;
+        }
+
+        /* 機器主體 */
+        #gacha-machine {
+            width: 320px;
+            background: white;
+            padding: 25px;
+            border-radius: 40px;
+            border: 6px solid var(--dark-text);
+            box-shadow: 10px 10px 0px var(--accent-color);
+            text-align: center;
+        }
+
+        /* 顯示視窗 */
+        #display-window {
+            height: 160px;
+            background: #fff;
+            border: 5px solid var(--dark-text);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 90px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 訊息區塊：字體超大 */
+        #message-display {
+            min-height: 140px;
+            background: #fff;
+            color: var(--dark-text);
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 28px; /* 加大字體 */
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            border: 3px solid var(--accent-color);
+        }
+
+        /* 搖桿按鈕 */
+        #lever {
+            width: 100%;
+            padding: 15px 0;
+            background: var(--accent-color);
+            border: 4px solid var(--dark-text);
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 var(--dark-text);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            transition: 0.1s;
+        }
+
+        #lever:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 var(--dark-text);
+        }
+
+        /* 模擬流暢切換的模糊感 */
+        .blur {
+            filter: blur(5px);
+            opacity: 0.8;
+        }
+
+        .pop {
+            animation: pop 0.2s ease-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>五年啦！</h1>
+
+    <div id="gacha-machine">
+        <div id="display-window">❤️</div>
+        <div id="message-display">準備好抽獎了嗎？</div>
+        <div id="lever" onclick="handleGacha()">PUSH</div>
+    </div>
+
+    <script>
+        const data = [
+            { emoji: '🍅', txt: '聽說容容更愛我?' },
+            { emoji: '☕', txt: '很久沒去咖啡探險了欸?' },
+            { emoji: '🧺', txt: '今天我就乖乖待在籃子裡，請不要洗我。' },
+            { emoji: '🍳', txt: '五週年還想讓我工作？我就直接燒焦給妳看！' },
+            { emoji: '🐈‍⬛', txt: '\\肉泥/\\肉泥/\\肉泥/\\肉泥/\\肉泥/' },
+            { emoji: '💤', txt: '。' },
+            { emoji: '🥃', txt: '今天要喝威士忌還是威士忌呢?' },
+            { emoji: '💖', txt: '五週年快樂！' }
+        ];
+
+        let spinning = false;
+        let spinTimer;
+        const lever = document.getElementById('lever');
+        const display = document.getElementById('display-window');
+        const msg = document.getElementById('message-display');
+
+        function handleGacha() {
+            if (spinning) {
+                stopSpin();
+            } else {
+                startSpin();
+            }
+        }
+
+        function startSpin() {
+            spinning = true;
+            lever.innerText = 'STOP!';
+            msg.innerText = '看看會抽到什麼...';
+            display.classList.add('blur');
+            
+            spinTimer = setInterval(() => {
+                const random = data[Math.floor(Math.random() * data.length)];
+                display.innerText = random.emoji;
+            }, 60); 
+        }
+
+        function stopSpin() {
+            spinning = false;
+            lever.innerText = 'PUSH';
+            clearInterval(spinTimer);
+            display.classList.remove('blur');
+            display.classList.add('pop');
+            
+            const result = data[Math.floor(Math.random() * data.length)];
+            display.innerText = result.emoji;
+            msg.innerText = result.txt;
+
+            setTimeout(() => display.classList.remove('pop'), 200);
+        }
+    </script>
+</body>
+</html>
